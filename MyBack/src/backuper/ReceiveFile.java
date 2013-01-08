@@ -10,6 +10,8 @@ import java.io.File;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
+import conf.Conf;
+
 /**
  * Klasa do odbierania pliku
  * Po nawiązaniu połączenia trzeba stworzyć jej obiekt przekazując gniazdko

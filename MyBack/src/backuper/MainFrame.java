@@ -4,14 +4,10 @@
  */
 package backuper;
 
-import javax.swing.JList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
 import javax.swing.*;
+
+import conf.Conf;
+
 import java.awt.Container;
 import java.awt.event.*;
 import java.awt.*;

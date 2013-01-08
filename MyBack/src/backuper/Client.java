@@ -1,26 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package backuper;
 
 import javax.swing.JFrame;
 import java.io.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
+import conf.Conf;
+
 /**
- * Klasa Client, obsługa wszystkich akcji związanych z połączeniem, interfejsem graficznym i przesyłaniem plików
- * Kontroluje działania całej aplikacji klienta
- *
- * @author Ostros
+ * Obs�uga polaczenia, interfejs graficzny, przesylanie pliku, kontrola
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class Client {
 
     Conf konf;
-    MainFrame ramka;
+    MainFrame okno;
     Connector conn;
     FileContainer lista;
     private boolean isConnected;
@@ -32,20 +26,19 @@ public class Client {
      */
     public Client() {
         lista = new FileContainer();
-        ramka = new MainFrame(this);
+        okno = new MainFrame(this);
         konf = Conf.getInstance();
-        ramka.setParams(konf);
-        ramka.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ramka.setVisible(true);
-        ramka.setTitle(Conf.version + " Rozłączony");
+        okno.setParams(konf);
+        okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        okno.setVisible(true);
+        okno.setTitle(Conf.version + " Disconnected");
         isConnected = false;
         spy = new Spy(this);
-
 
     }
 
     /**
-     * Wyświetlenie komunikatu o akcji użytkownika na standardowym wyjściu
+     * Wy�wietlanie komunikat�w na standardowym wyj�ciu
      * @param name Informacje o akcji.
      */
     public void userAction(String name) {
@@ -59,7 +52,7 @@ public class Client {
             if (conn.getConnection()) {
                 lista.checkRemote();
                 isConnected = true;
-                ramka.setTitle(Conf.version + "Połączony z " + host + ":" + port);
+                okno.setTitle(Conf.version + "Connected with " + host + ":" + port);
                 StringTokenizer st = new StringTokenizer(konf.getGodz(), ":");
 
                 int godz = Integer.parseInt(st.nextToken());
@@ -67,12 +60,12 @@ public class Client {
 
                 spy.makeSpy(konf.getMode(), Integer.parseInt(konf.getMin()), godz, godz_min);
             } else {
-                ramka.errorDialog(1, "Problem z połączeniem\nSerwer nie odpowiada lub Twoje dane są nieprawidłowe");
+                okno.errorDialog(1, "Problem z polaczeniem\n Serwer nie odpowiada lub b��dne has�o");
             }
-            ramka.repaintPanel();
+            okno.repaintPanel();
         } catch (Connector.ConnectionException ex) {
             ex.printStackTrace();
-            ramka.errorDialog(2, "Błąd autentyfikacji!\nZły użytkownik i/lub hasło");
+            okno.errorDialog(2, "Z�y login lub has�o");
         }
 
 
@@ -83,10 +76,10 @@ public class Client {
             spy.stopSpy();
             conn.disconnect();
             isConnected = false;
-            ramka.setTitle(Conf.version + " Rozłączony");
-            ramka.repaintPanel();
+            okno.setTitle(Conf.version + " Disconnected");
+            okno.repaintPanel();
         } catch (NullPointerException ex) {
-            ramka.infoDialog("Nie jesteś połączony z serwerem");
+            okno.infoDialog("Nie jeste� po��czony");
         }
 
     }
@@ -96,60 +89,53 @@ public class Client {
     }
 
     /**
-     * Funkcja uruchamiająca backup
+     * Backup
      *
      */
     public int backup() {
         try {
-            ramka.runBar();
+            okno.runBar();
         } catch (NullPointerException ex) {
         }
         int ret = 0;
         try {
-            // To jest ryzykowne, możliwe że przez to coś nie będzie działać!
-            int czyPotrzebnyBackup = lista.prepareBackup();
+            int czyPotrzebnyBackup = lista.prepareBackup(); //Czy pliki wymagaj� Backupu
             if (czyPotrzebnyBackup > 0) {
                 int i = conn.doBackup(lista);
                 if (i == 1) {
                     this.getListFromServer();
-                    // ramka.infoDialog("Transmisja zakończona poprawnie!");
-                    // Tworzenie stanów plików na dysku lokalnym
-                    lista.createStates();
-                    // Odświeżenie listy wyświetlanej użytkownikowi
-                    ramka.refreshList();
-
-                    /**
-                     * Trzeba przeslac jeszcze raz plik z lista plikow zdalnych!
-                     */
-                    ret = 1;
+                    okno.infoDialog("Done ! Lista plik�w pobrana");
+                    lista.createStates();// Tworzenie log�w plik�w lokalnych
+                    okno.refreshList(); // Lista 
+                    ret = 1; //jeszcze raz przesylamy plik z lista plikow
                 }
             } else {
                 System.out.println("Backup niepotrzebny");
             }
 
         } catch (NullPointerException ex) {
-            ramka.errorDialog("Błąd połączenia z serwerem!");
+            okno.errorDialog("Connection Error");
 
         }
-        ramka.stopBar();
+        okno.stopBar();
         return ret;
 
     }
 
     public void przywroc() {
-        ramka.runBar();
+        okno.runBar();
         try {
             int i = conn.przywroc();
             if (i == 1) {
-                ramka.infoDialog("Transmisja zakończona poprawnie!");
+                okno.infoDialog("Transmisja zako�czona poprawnie!");
             }
             this.getListFromServer();
             lista.createStates();
-            ramka.refreshList();
+            okno.refreshList();
         } catch (NullPointerException ex) {
-            ramka.errorDialog("Błąd połączenia z serwerem!");
+            okno.errorDialog("Connection Error");
         }
-        ramka.stopBar();
+        okno.stopBar();
     }
 
     public void getFile(File plik) {
@@ -160,7 +146,7 @@ public class Client {
     }
 
     public void changeVisible() {
-        ramka.changeVisible();
+        okno.changeVisible();
     }
 
     /**
@@ -169,14 +155,14 @@ public class Client {
     public void listAdd(File file) {
         int i = lista.add(file);
         if (i == 0) {
-            ramka.infoDialog("Plik " + file.getName() + "\nznajduje się już na liście");
+            okno.infoDialog("Plik " + file.getName() + "\n znajduje sie na liscie");
         }
     }
-
-    public void listAdd(File file, DefaultListModel model) {
+//To mo�na poprawic
+    public void listAdd(File file, @SuppressWarnings("rawtypes") DefaultListModel model) {
         int i = lista.add(file, model);
         if (i == 0) {
-            ramka.infoDialog("Plik " + file.getName() + "\nznajduje się już na liście");
+            okno.infoDialog("Plik " + file.getName() + "\n znajduje sie na liscie");
         }
     }
 
@@ -184,7 +170,8 @@ public class Client {
         return lista.get(no);
     }
 
-    public ArrayList listGetContainer() {
+    @SuppressWarnings("rawtypes")
+	public ArrayList listGetContainer() {
         return lista.getContainer();
     }
 
@@ -203,7 +190,6 @@ public class Client {
             conn.receiveList();
         } catch (NullPointerException ex) {
         }
-
     }
 
     public int listGetEltState(int index) {

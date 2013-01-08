@@ -23,7 +23,7 @@ public class SendFile {
     private Socket socket;
     private OutputStream os;
     private InputStream is;
-    private static final int WIELKOSC_PROBKI = backuper.Conf.WIELKOSC_PROBKI;
+    private static final int WIELKOSC_PROBKI = conf.Conf.WIELKOSC_PROBKI;
 
     /**
      * Konstruktor klasy do wysyłania plików

@@ -10,6 +10,8 @@ import java.io.File;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
+import conf.Conf;
+
 /**
  * Klasa wysyłająca pojednyczny plik na wskazane gniazdko
  * Podajemy tylko gniazdko w konstrukotrze oraz nazwę pliku do wysłania w odpowiedniej metodzie
