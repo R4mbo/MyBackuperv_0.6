@@ -1,17 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package backuper;
 
 import java.net.Socket;
 import java.io.*;
 
-
 /**
- * Klasa obsÅ‚ugujÄ…ca poÅ‚Ä…czenie z serwerem
- * TODO: przesyÅ‚anie plikÃ³w, autoryzacja
- * @author Ostros
+ * Obs³ugiwanie po³¹czenia z serwerem
+ * TODO: wysy³anie plikow, autoryzacja
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class Connector implements Runnable {
 
@@ -24,8 +19,8 @@ public class Connector implements Runnable {
     OutputStream os;
 
     /**
-     * Konstrukotr zapisujÄ…cy dane do poÅ‚Ä…czenia.
-     * PoÅ‚Ä…czenie jeszcze nie jest tworzone!
+     * Konstrukotr zawieraj¹cy dane do polaczenia
+     * Uwaga tutaj polaczenie jeszcze nie jest tworzone
      * @param remoteHost Adres zdalnego hosta
      * @param portNo Numer portu zdalnego hosta
      */
@@ -40,14 +35,13 @@ public class Connector implements Runnable {
     }
 
     /**
-     * Metoda obsÅ‚ugujÄ…ca poÅ‚Ä…czenie z serwerem
-     * TODO: autoryzacja!
-     * @return Zwraca ciastko na ktÃ³rym nawiÄ…zane jest poÅ‚Ä…czenie
+     * Obs³uga po³¹czenia
+     * TODO: Autoryzacja
      */
     public boolean getConnection() throws ConnectionException {
 
         try {
-            print("Å?Ä…czenie z serwerem(" + name + "@" + remoteHost + ":" + portNo + ")...");
+            print("£¹czenie.... (" + name + "@" + remoteHost + ":" + portNo + ")...");
             try {
                 /*
                 socket = new Socket(remoteHost, portNo);
