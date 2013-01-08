@@ -1,18 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package backuper;
 
 import java.util.*;
 import java.io.*;
-import java.io.File.*;
 import javax.swing.*;
 
 /**
- * Klasa przechowująca listę plików zbackupowanych/do backupu
- * ???
- * @author Ostros
+ * Przechowywanie listy plikow
+ * 
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class FileContainer {
 

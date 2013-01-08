@@ -8,15 +8,15 @@ import java.io.*;
  * TODO: wysy�anie plikow, autoryzacja
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
-public class Connector implements Runnable {
+public class Connector {
 
     Socket socket;
     String remoteHost;
     int portNo;
     String name;
     char[] password;
-    InputStream is;
-    OutputStream os;
+    InputStream myInputStream;
+    OutputStream myOutputStream;
 
     /**
      * Konstrukotr zawieraj�cy dane do polaczenia
@@ -43,51 +43,35 @@ public class Connector implements Runnable {
         try {
             print("��czenie.... (" + name + "@" + remoteHost + ":" + portNo + ")...");
             try {
-                /*
                 socket = new Socket(remoteHost, portNo);
-                this.is = socket.getInputStream();
-                this.os = socket.getOutputStream();
-                byte[] hello = new byte[3];
-                is.read(hello, 0, 3);
-                 */
-                socket = new Socket(remoteHost, portNo);
-                this.is = socket.getInputStream();
-                this.os = socket.getOutputStream();
+                this.myInputStream = socket.getInputStream();
+                this.myOutputStream = socket.getOutputStream();
                 byte[] hello = new byte[3];
 
-                is.read(hello, 0, 3);
+                myInputStream.read(hello, 0, 3);
                 System.out.write(hello);
 
-                /**
-                 * Wysłanie nazwy użytkownika
-                 */
-                byte[] username = name.getBytes();
-                os.write(username.length);
-                os.write(username);
+                byte[] username = name.getBytes(); //Wysy�anie nazwy uzytkownika
+                myOutputStream.write(username.length);
+                myOutputStream.write(username);
 
-                /**
-                 * Wysłanie hasła
-                 */
-                String t = new String(password);
+                String t = new String(password); // wysy�anie has�a
                 byte[] pass = t.getBytes();
-                os.write(pass.length);
-                os.write(pass);
+                myOutputStream.write(pass.length);
+                myOutputStream.write(pass);
 
-                /**
-                 * Sprawdzenie odpowiedzi z serwera
-                 */
-                is.read(hello, 0, 3);
-                String check = new String(hello);
+                myInputStream.read(hello, 0, 3);
+                String check = new String(hello); // Odpowiedz z serwera
 
                 if (check.equals("oki")) {
-                    ReceiveFile rf = new ReceiveFile(is, os);
+                    ReceiveFile rf = new ReceiveFile(myInputStream, myOutputStream);
                     rf.receiveList();
 
                     return true;
                 } else if (check.equals("err")) {
                     System.out.println("Auth error!");
                     throw new ConnectionException("Auth error");
-                    // return 0;
+
                 }
 
             } catch (Exception ex) {
@@ -114,53 +98,35 @@ public class Connector implements Runnable {
     }
 
     /**
-     * Wątek połączenia
-     */
-    public void run() {
-        // niepotrzebne w sumie, ale zostawiam na przyszłość
-    }
-
-    /**
-     * Wyświetlenie komunikatu informacyjnego
-     * Metoda zmodyfikowana aby pobierać tylko istotne pliki do backupu,
-     * a nie całość danych jaką podał user
-     * @param text Tresć komunikatu
+     * Wy�wietlanie komunikatu informacyjnego
+     * Pobieranie plikow(tylko te co potrzebne)
+     * @param text Tre�� komunikatu
      */
     public int doBackup(FileContainer lista) {
 
         byte[] hello = new byte[3];
-        // info DoBAckup
 
+        try {
 
-        try {/*
-            socket = new Socket(remoteHost, portNo);
-            this.is = socket.getInputStream();
-            this.os = socket.getOutputStream();
-
-            is.read(hello, 0, 3);
-            System.out.write(hello);
-             */
             hello = "dba".getBytes();
-
-
-            os.write(hello);
+            myOutputStream.write(hello);
             /**
-             * Trzeba wysłać ile plików chcemy przesylac i nadawac w petli z jakims potwierdzeniem...
+             * Wysy�anie plikow oraz potwierdzenie
              */
             int ile = lista.getBackupSize();
             byte[] ile_b = Integer.toString(ile).getBytes();
             System.out.println(ile_b.length);
             System.out.write(ile_b);
-            os.write(ile_b.length);
-            os.write(ile_b);
+            myOutputStream.write(ile_b.length);
+            myOutputStream.write(ile_b);
             for (int i = 0; i < ile; i++) {
-                SendFile wyslij = new SendFile(is, os);
+                SendFile filetosent = new SendFile(myInputStream, myOutputStream);
                 File tmp = new File(lista.getBackup(i));
-                wyslij.sendFile(tmp);
+                filetosent.sendFile(tmp);
 
             }
 
-            is.read(hello, 0, 3);
+            myInputStream.read(hello, 0, 3);
             String koniec = new String(hello);
             if (koniec.equals("end")) {
                 return 1;
@@ -178,37 +144,31 @@ public class Connector implements Runnable {
 
     public int przywroc() {
         byte[] hello = new byte[3];
-        // info PRZywroc
 
 
-        try {/*
-            socket = new Socket(remoteHost, portNo);
-            this.is = socket.getInputStream();
-            this.os = socket.getOutputStream();
 
-            is.read(hello, 0, 3);
-            System.out.write(hello);
-             */
+        try {
             hello = "prz".getBytes();
-            os.write(hello);
-            System.out.println("Przywracanie plików");
-            int ile_byte = is.read();
+            myOutputStream.write(hello);
+            System.out.println("Przywracanie...");
+            int ile_byte = myInputStream.read();
             System.out.println(ile_byte);
             byte[] ile_b = new byte[ile_byte];
-            is.read(ile_b, 0, ile_b.length);
+            myInputStream.read(ile_b, 0, ile_b.length);
 
             String tmp = new String(ile_b);
             int ile = new Integer(tmp);
-            System.out.println("Plików do odberania: " + ile);
+            System.out.println("plikow do obebrania");
+           
+            //odbieranie plikow
             for (int i = 0; i < ile; i++) {
-                ReceiveFile odbierz = new ReceiveFile(is, os);
+                ReceiveFile odbierz = new ReceiveFile(myInputStream, myOutputStream);
                 odbierz.receiveFile();
-                //lista.add(odbierz.receiveFile());
             }
             hello = "end".getBytes();
-            os.write(hello, 0, 3);
+            myOutputStream.write(hello, 0, 3);
 
-            os.write(hello);
+            myOutputStream.write(hello);
 
 
         } catch (Exception ex) {
@@ -227,22 +187,14 @@ public class Connector implements Runnable {
         try {
             byte[] hello = new byte[3];
             hello = "get".getBytes();
-            os.write(hello);
-
-            // Długość ścieżki
-            os.write(plik.getPath().getBytes().length);
-
-            // Ścieżka
-            os.write(plik.getPath().getBytes());
-
-            ReceiveFile odbierz = new ReceiveFile(is, os);
+            myOutputStream.write(hello);
+            myOutputStream.write(plik.getPath().getBytes().length);
+            myOutputStream.write(plik.getPath().getBytes());
+            ReceiveFile odbierz = new ReceiveFile(myInputStream, myOutputStream);
             odbierz.receiveFile();
-            //lista.add(odbierz.receiveFile());
-
             hello = "end".getBytes();
-            os.write(hello, 0, 3);
-
-            os.write(hello);
+            myOutputStream.write(hello, 0, 3);
+            myOutputStream.write(hello);
         } catch (IOException ex) {
         }
 
@@ -252,9 +204,9 @@ public class Connector implements Runnable {
         try {
             byte[] hello = new byte[3];
             hello = "sli".getBytes();
-            os.write(hello);
+            myOutputStream.write(hello);
             System.out.println("SendList");
-            ReceiveFile rf = new ReceiveFile(is, os);
+            ReceiveFile rf = new ReceiveFile(myInputStream, myOutputStream);
             rf.receiveList();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -269,28 +221,23 @@ public class Connector implements Runnable {
         try {
             byte[] kon = new byte[3];
             kon = "kon".getBytes();
-            os.write(kon, 0, 3);
-            os.close();
-            is.close();
+            myOutputStream.write(kon, 0, 3);
+            myOutputStream.close();
+            myInputStream.close();
             socket.close();
         } catch (Exception ex) {
         }
-        this.print("Rozłączony");
+        this.print("Disconnected..");
 
     }
 
     public void delFileFromServer(File path) {
         try {
-            byte[] kon = new byte[3];
-            kon = "del".getBytes();
-            os.write(kon, 0, 3);
-
-
-
-            os.write(path.getPath().getBytes().length);
-
-            // Ścieżka
-            os.write(path.getPath().getBytes());
+            byte[] delete = new byte[3];
+            delete = "del".getBytes();
+            myOutputStream.write(delete, 0, 3);
+            myOutputStream.write(path.getPath().getBytes().length);
+            myOutputStream.write(path.getPath().getBytes());//�cie�ka
         } catch (IOException ex) {
         }
     }
