@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package client;
 
 import java.util.Calendar;
@@ -9,8 +5,7 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 /**
- * Klasa która co określony przez użytkownika czas dokonuje backupu
- * Może uda się to zrobić np. o ustalonej z góry porze...
+ *Harmonogram
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class Spy {
@@ -56,9 +51,9 @@ public class Spy {
         int godz_min;
 
         /**
-         * Konstruktor klasy śledzącej
-         * @param mode Tryb pracy: 0 - nic, 1 - minutowy, 2 - cogodzinny, 3 - oba
-         * @param min Co ile minut wykonać backup
+         * Konstruktor klasy 
+         * @param mode Tryb pracy: 0 - nic, 1 - minutowy, 2 - cogodzinny, 3 - doba
+         * @param min Co ile minut wykona� backup
          * @param godz O ktorej godzinie wykonac backup
          */
         public SpyThread(int mode, int min, int godz, int godz_min) {
@@ -118,7 +113,6 @@ public class Spy {
 
 
                     }
-
 
                     // sleep na minute
                     Thread.sleep(60000);

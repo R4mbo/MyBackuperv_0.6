@@ -17,14 +17,14 @@ public class Main {
     	int portNo = 8000;
     	if (args.length > 0 && args[0].equals("serve")) {
             if (args.length == 1) {
-                System.out.println("wlacz serwer");
+                System.out.println("W��cz serwer");
                 @SuppressWarnings("unused")
 				server.Server srv = new server.Server(portNo);
 
             } else if (args.length == 2) {
-                System.out.println("wlacz serwer na innym porcie");
+                System.out.println("Wybierz inny port serwera");
             } else if (args.length == 4 && args[1].endsWith("adduser")) {
-                System.out.println("dodaj uzytkownika");
+                System.out.println("Dodano uzytkownika"+ "adduser");
                 File path = new File(System.getProperty("user.dir") + "\\back\\" + args[2] + "_" + args[3] + "\\");
                 path.mkdirs();
                 path = new File(path.getAbsolutePath() + "\\list");
@@ -38,20 +38,11 @@ public class Main {
 
         } else if (args.length > 0) {
             System.out.println("Nierozpoznane polecenie\n" +
-                    "Pomoc programu BackOPAr\n" +
-                    "- uruchom bez parametru, aby odpalić aplikację klienta\n" +
-                    "- uruchom z parametrem \"serve\" aby odpalić serwer (nie uruchamia się w tle)\n" +
-                    "- Inne parametry\n" +
-                    "\tadduser username password - tworzy uzytkownika o nazwie username i hasle password\n" +
-                    "\n" +
-                    "\n" +
-                    "Autor: Krzysztof K. Ostrowski (K.K.Ostrowski@stud.elka.pw.edu.pl\n" +
-                    "Projekt zaliczeniowy OPA 09Z ");
+                    "Zajrzyj do README.txt");
         } else {
             System.out.println("Ramka otwarta");
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-                //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
             } catch (UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();
             } catch (IllegalAccessException ex) {
@@ -61,8 +52,6 @@ public class Main {
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
-            /* Turn off metal's use of bold fonts */
-            // UIManager.put("swing.boldMetal", Boolean.FALSE);
 
             final Client klient = new Client();
             if (!SystemTray.isSupported()) {

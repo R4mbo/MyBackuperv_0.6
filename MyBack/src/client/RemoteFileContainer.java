@@ -5,10 +5,7 @@ import java.util.*;
 import java.io.*;
 
 /**
- * Klasa przechowujÄ…ca informacje o plikach zdalnych
- * Zawiera sciezke dostepu do pliku w lokalnym systemie plikow
- * Date modyfikacji pliku na serwerze
- * Status pliku mowiacy o rodzaju jego backupi
+ * Przechowuje informacje o plikach zdalnych, zawiera œciê¿kê , datê modyfikacji
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class RemoteFileContainer {
@@ -22,7 +19,7 @@ public class RemoteFileContainer {
 	private ArrayList timestamp;
 
     /**
-     * Konstrutktor, odpalany dopiero po poÅ‚Ä…czeniu z serwerem
+     * Konstrutktor, po po³¹czeniu
      *
      */
     @SuppressWarnings("rawtypes")
@@ -39,15 +36,14 @@ public class RemoteFileContainer {
             in = new BufferedReader(new FileReader(listaPlikow));
             pliki = this.loadContainer();
 
-            //  out = new PrintWriter(new FileWriter(listaPlikow), true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // this.saveList()
+
     }
 
     /**
-     * Å?adowanie kontenera danymi
+     * ³adowanie kontenera
      * @return
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -80,18 +76,16 @@ public class RemoteFileContainer {
     /**
      * Funkcja zwraca date ostatniej modyfikacji pliku, ktory znajduje sie na serwerze
      * @param path Sciezka dostepu do pliku w systemie lokalnym
-     * @return Data pliku w unix time (chyba :)) albo -1 jesli dany plik nie istnieje w backupie
+     * @return Data pliku w UnixTime
      */
     public Long getLastMod(String path) {
         int position = pliki.indexOf(new File(path));
         Long mod;
         if (position != -1) {
-            //System.out.println("pos: " + position);
             mod = Long.parseLong(timestamp.get(position).toString());
-            // System.out.println(mod);
 
         } else {
-            mod = new Long(-1);  // bliku nie ma w backupie!
+            mod = new Long(-1);  // pliku nie ma
         }
         return mod;
     }

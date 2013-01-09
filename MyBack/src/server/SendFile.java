@@ -12,16 +12,14 @@ import java.util.*;
 import java.io.File;
 
 /**
- * Klasa wysyłająca pojednyczny plik na wskazane gniazdko
- * Podajemy tylko gniazdko w konstrukotrze oraz nazwę pliku do wysłania w odpowiedniej metodzie
- * Teoretycznie klasa jest wielorazowego użytku, wymaga jednak testów
+ *Klasa wysy�aj�ca plik na wskazane gniazdko
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class SendFile {
 
     private Socket socket;
-    private OutputStream os;
-    private InputStream is;
+    private OutputStream myOutputStream;
+    private InputStream myInputStream;
     private static final int SIZE_PAKIET =conf.Conf.SIZE_PAKIET;
 
     /**
@@ -33,8 +31,8 @@ public class SendFile {
         this.socket = s;
 
         try {
-            os = socket.getOutputStream();
-            is = socket.getInputStream();
+            myOutputStream = socket.getOutputStream();
+            myInputStream = socket.getInputStream();
         }
         catch(IOException ex) {
 
@@ -42,8 +40,8 @@ public class SendFile {
     }
     public SendFile(InputStream in, OutputStream out) {
 
-            os = out;
-            is = in;
+            myOutputStream = out;
+            myInputStream = in;
 
 
     }
@@ -62,60 +60,47 @@ public class SendFile {
         System.out.println(myFile.setLastModified(date.getTime()+2000));
        
 
-        /**
-         * Stworzenie strumienia wyjściowego, zeby klientowi wyslac niezbędne dane o pliku
-         */
-        // Długość ścieżki
-        os.write(path.getBytes().length);
 
-        // Ścieżka
-        os.write(path.getBytes());
+        myOutputStream.write(path.getBytes().length);
 
-        // Długość pliku
+
+        myOutputStream.write(path.getBytes());
+
+
         String dlugosc = Long.toString(myFile.length());
         byte aaa[] = dlugosc.getBytes();
-        os.write(aaa.length);
-        os.write(aaa);
+        myOutputStream.write(aaa.length);
+        myOutputStream.write(aaa);
 
-        // Ilosc probek po WIELKOSC_PROBKI
-        // Nie wysylam dopelnienia, klient sam sobie je wyliczy
-        // Zakladam ze w ciele Z liczyc umie komputer :)
         int ile = (int)myFile.length() / SIZE_PAKIET;
         String ilee = Integer.toString(ile);
         byte[] ile_b = ilee.getBytes();
-        os.write(ile_b.length);
-        os.write(ile_b);
+        myOutputStream.write(ile_b.length);
+        myOutputStream.write(ile_b);
 
-        os.flush();
+        myOutputStream.flush();
 
 
-        // wysylanie pliku
         byte[] data = new byte[SIZE_PAKIET];
         FileInputStream fis = new FileInputStream(myFile);
         for(int i = 0; i < ile; i++) {
             fis.read(data, 0 ,SIZE_PAKIET);
-            os.write(data, 0 , SIZE_PAKIET);
-         //   fos.write(data, 0 , WIELKOSC_PROBKI);
-            os.flush();
+            myOutputStream.write(data, 0 , SIZE_PAKIET);
 
-          //  System.out.write(data);
+            myOutputStream.flush();
+
+
         }
         int dopelnienie = (int)myFile.length() - ile *SIZE_PAKIET;
         byte[] tmp = new byte[dopelnienie];
-       // System.out.println(tmp.length);
+
         fis.read(tmp, 0, tmp.length);
-        os.write(tmp, 0 ,tmp.length);
-       // fos.write(tmp, 0, tmp.length);
-        os.flush();
+        myOutputStream.write(tmp, 0 ,tmp.length);
+
+        myOutputStream.flush();
         byte[] tren = new byte[4];
-        System.out.println(is.read(tren, 0, 4));
-     /*    try {
-            FileChannel fileChannel = fis.getChannel();
-            FileLock lock = fileChannel.lock();
-            lock.release();
-        }
-        catch(Exception ex) {ex.printStackTrace();}*/
-       
+        System.out.println(myInputStream.read(tren, 0, 4));
+
         fis.close();
         String tr3n = new String(tren);
         if(tr3n.equals("TrEn")) System.out.println("Plik wysłany poprawnie");

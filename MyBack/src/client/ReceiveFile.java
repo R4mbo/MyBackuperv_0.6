@@ -17,27 +17,27 @@ import conf.Conf;
  */
 public class ReceiveFile {
 
-    Socket socket;
-    InputStream is;
-    OutputStream os;
+    Socket mySocket;
+    InputStream myInputStream;
+    OutputStream myOutputStream;
     private static final int SIZE_PAKIET = Conf.SIZE_PAKIET;
 
     @Deprecated
     public ReceiveFile(Socket sock) throws IOException {
-        this.socket = sock;
-        this.is = socket.getInputStream();
-        this.os = socket.getOutputStream();
+        this.mySocket = sock;
+        this.myInputStream = mySocket.getInputStream();
+        this.myOutputStream = mySocket.getOutputStream();
 
     }
 
     public ReceiveFile(InputStream in, OutputStream out) {
-        is = in;
-        os = out;
+        myInputStream = in;
+        myOutputStream = out;
     }
 
     public void reinit() throws IOException {
-        this.is = socket.getInputStream();
-        this.os = socket.getOutputStream();
+        this.myInputStream = mySocket.getInputStream();
+        this.myOutputStream = mySocket.getOutputStream();
 
     }
 
@@ -45,7 +45,7 @@ public class ReceiveFile {
         // Dlugosc sciezki
         int wielkosc;
         do {
-            wielkosc = is.read();
+            wielkosc = myInputStream.read();
         } while (wielkosc == -1);
 
 
@@ -53,25 +53,25 @@ public class ReceiveFile {
 
         // Sciezka
         byte[] sciezka_t = new byte[wielkosc];
-        is.read(sciezka_t, 0, sciezka_t.length);
+        myInputStream.read(sciezka_t, 0, sciezka_t.length);
         String sciezka = new String(sciezka_t);
         System.out.println(sciezka);
 
         // Dlugosc dlugosci
-        int dlugosc_t = is.read();
+        int dlugosc_t = myInputStream.read();
 
         // Dlugosc pliku
 
         byte[] dlugosc_te = new byte[dlugosc_t];
-        is.read(dlugosc_te, 0, dlugosc_te.length);
+        myInputStream.read(dlugosc_te, 0, dlugosc_te.length);
         String dlugosc = new String(dlugosc_te);
         System.out.println(dlugosc);
         int dlugosc_pliku = new Integer(dlugosc);
 
         // Dlugosc probki
-        int dlugosc_ile_probek = is.read();
+        int dlugosc_ile_probek = myInputStream.read();
         byte[] ile_probek = new byte[dlugosc_ile_probek];
-        is.read(ile_probek, 0, ile_probek.length);
+        myInputStream.read(ile_probek, 0, ile_probek.length);
         String probek = new String(ile_probek);
         System.out.println(probek);
         int ile = new Integer(probek);
@@ -87,7 +87,7 @@ public class ReceiveFile {
 
 
         for (int i = 0; i < ile; i++) {
-            int size = is.read(c, 0, SIZE_PAKIET);
+            int size = myInputStream.read(c, 0, SIZE_PAKIET);
             fos.write(c, 0, size);
             fos.flush();
         }
@@ -95,13 +95,13 @@ public class ReceiveFile {
         int dopelnienie = dlugosc_pliku - SIZE_PAKIET * ile;
 
         byte[] tmp = new byte[dopelnienie];
-        int size = is.read(tmp, 0, dopelnienie);
+        int size = myInputStream.read(tmp, 0, dopelnienie);
         // System.out.write(tmp);
         fos.write(tmp, 0, size);
 
 
 
-        os.write("TrEn".getBytes());
+        myOutputStream.write("TrEn".getBytes());
 
         FileChannel fileChannel = fos.getChannel();
         FileLock lock = fileChannel.lock();
@@ -138,7 +138,7 @@ public class ReceiveFile {
         // Dlugosc sciezki
         int wielkosc;
         do {
-            wielkosc = is.read();
+            wielkosc = myInputStream.read();
         } while (wielkosc == -1);
 
 
@@ -146,25 +146,25 @@ public class ReceiveFile {
 
         // Sciezka
         byte[] sciezka_t = new byte[wielkosc];
-        is.read(sciezka_t, 0, sciezka_t.length);
+        myInputStream.read(sciezka_t, 0, sciezka_t.length);
         String sciezka = new String(sciezka_t);
         System.out.println(sciezka);
 
         // Dlugosc dlugosci
-        int dlugosc_t = is.read();
+        int dlugosc_t = myInputStream.read();
 
         // Dlugosc pliku
 
         byte[] dlugosc_te = new byte[dlugosc_t];
-        is.read(dlugosc_te, 0, dlugosc_te.length);
+        myInputStream.read(dlugosc_te, 0, dlugosc_te.length);
         String dlugosc = new String(dlugosc_te);
         System.out.println(dlugosc);
         int dlugosc_pliku = new Integer(dlugosc);
 
         // Dlugosc probki
-        int dlugosc_ile_probek = is.read();
+        int dlugosc_ile_probek = myInputStream.read();
         byte[] ile_probek = new byte[dlugosc_ile_probek];
-        is.read(ile_probek, 0, ile_probek.length);
+        myInputStream.read(ile_probek, 0, ile_probek.length);
         String probek = new String(ile_probek);
         System.out.println(probek);
         int ile = new Integer(probek);
@@ -179,7 +179,7 @@ public class ReceiveFile {
 
 
         for (int i = 0; i < ile; i++) {
-            int size = is.read(c, 0, SIZE_PAKIET);
+            int size = myInputStream.read(c, 0, SIZE_PAKIET);
             fos.write(c, 0, size);
             fos.flush();
         }
@@ -187,21 +187,17 @@ public class ReceiveFile {
         int dopelnienie = dlugosc_pliku - SIZE_PAKIET * ile;
 
         byte[] tmp = new byte[dopelnienie];
-        int size = is.read(tmp, 0, dopelnienie);
+        int size = myInputStream.read(tmp, 0, dopelnienie);
         // System.out.write(tmp);
         fos.write(tmp, 0, size);
 
 
 
-        os.write("TrEn".getBytes());
+        myOutputStream.write("TrEn".getBytes());
 
 
         fos.flush();
         fos.close();
-
-
-
-
         System.out.println(myFile.hashCode());
         return myFile;
     }

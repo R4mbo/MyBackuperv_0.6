@@ -10,43 +10,40 @@ import java.nio.channels.FileLock;
 import conf.Conf;
 
 /**
- * Klasa wysyłająca pojednyczny plik na wskazane gniazdko
- * Podajemy tylko gniazdko w konstrukotrze oraz nazwę pliku do wysłania w odpowiedniej metodzie
- * Teoretycznie klasa jest wielorazowego użytku, wymaga jednak testów
+ * Wys�anie pliku na gniazdko
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class SendFile {
 
     private Socket socket;
-    private OutputStream os;
-    private InputStream is;
+    private OutputStream myOutputStream;
+    private InputStream myInputStream;
     private static final int SIZE_PAKIET = Conf.SIZE_PAKIET;
 
     /**
-     * Konstruktor klasy do wysyłania plików
-     * @param s Gniazdko do komunikacji z klientem przyjmującym plik
+     * Konstruktor klasy do wysy�ania plik�w
      */
     @Deprecated
     public SendFile(Socket s) {
         this.socket = s;
 
         try {
-            os = socket.getOutputStream();
-            is = socket.getInputStream();
+            myOutputStream = socket.getOutputStream();
+            myInputStream = socket.getInputStream();
         } catch (IOException ex) {
         }
     }
 
     public SendFile(InputStream in, OutputStream out) {
 
-        os = out;
-        is = in;
+        myOutputStream = out;
+        myInputStream = in;
 
 
     }
 
     /**
-     * Metoda wywoływana w celu przesłania pliku na zdefiniowane wcześniej ciastko
+     * 
      * Po stronie odbiorczej należy
      * @param plik
      * @return
@@ -58,28 +55,28 @@ public class SendFile {
         /**
          * Stworzenie strumienia wyjściowego, zeby klientowi wyslac niezbędne dane o pliku
          */
-        // Długość ścieżki
-        os.write(myFile.getPath().getBytes().length);
+        // d�ugosc sciezki
+        myOutputStream.write(myFile.getPath().getBytes().length);
 
-        // Ścieżka
-        os.write(myFile.getPath().getBytes());
+        // sciezka
+        myOutputStream.write(myFile.getPath().getBytes());
 
-        // Długość pliku
+        // dlugosc pliku
         String dlugosc = Long.toString(myFile.length());
         byte aaa[] = dlugosc.getBytes();
-        os.write(aaa.length);
-        os.write(aaa);
+        myOutputStream.write(aaa.length);
+        myOutputStream.write(aaa);
 
-        // Ilosc probek po WIELKOSC_PROBKI
-        // Nie wysylam dopelnienia, klient sam sobie je wyliczy
-        // Zakladam ze w ciele Z liczyc umie komputer :)
+        
+        
+       
         int ile = (int) myFile.length() / SIZE_PAKIET;
         String ilee = Integer.toString(ile);
         byte[] ile_b = ilee.getBytes();
-        os.write(ile_b.length);
-        os.write(ile_b);
+        myOutputStream.write(ile_b.length);
+        myOutputStream.write(ile_b);
 
-        os.flush();
+        myOutputStream.flush();
 
 
         // wysylanie pliku
@@ -87,21 +84,21 @@ public class SendFile {
         FileInputStream fis = new FileInputStream(myFile);
         for (int i = 0; i < ile; i++) {
             fis.read(data, 0, SIZE_PAKIET);
-            os.write(data, 0, SIZE_PAKIET);
-            //   fos.write(data, 0 , WIELKOSC_PROBKI);
-            os.flush();
+            myOutputStream.write(data, 0, SIZE_PAKIET);
+         
+            myOutputStream.flush();
 
-            //  System.out.write(data);
+
         }
         int dopelnienie = (int) myFile.length() - ile * SIZE_PAKIET;
         byte[] tmp = new byte[dopelnienie];
-        // System.out.println(tmp.length);
+
         fis.read(tmp, 0, tmp.length);
-        os.write(tmp, 0, tmp.length);
-        // fos.write(tmp, 0, tmp.length);
-        os.flush();
+        myOutputStream.write(tmp, 0, tmp.length);
+
+        myOutputStream.flush();
         byte[] tren = new byte[4];
-        System.out.println(is.read(tren, 0, 4));
+        System.out.println(myInputStream.read(tren, 0, 4));
         try {
             FileChannel fileChannel = fis.getChannel();
             FileLock lock = fileChannel.lock();
@@ -111,7 +108,7 @@ public class SendFile {
         fis.close();
         String tr3n = new String(tren);
         if (tr3n.equals("TrEn")) {
-            System.out.println("Plik wysłany poprawnie");
+            System.out.println("Plik wys�any poprawnie");
         }
         return 1;
     }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.util.*;
@@ -9,8 +5,7 @@ import java.io.*;
 
 
 /**
- * Klasa przechowująca listę plików zbackupowanych/do backupu
- * Była poprawka związana z zapisywaniem dobrych lastmodify do pliku
+ * Klasa przechowujaca liste plikow
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class FileContainer {
@@ -35,14 +30,14 @@ public class FileContainer {
         this.username = username;
         this.password = password;
         listaPlikow = new File(System.getProperty("user.dir") + "\\back\\" + username + "_" + password + "\\");
-       // listaPlikow.mkdirs();
+
 
         listaPlikow = new File(listaPlikow.getAbsolutePath() + "\\list");
 
-        //System.out.println(listaPlikow.getAbsolutePath());
+
 
         try {
-            //listaPlikow.createNewFile();
+
             in = new BufferedReader(new FileReader(listaPlikow));
             pliki = this.loadContainer();
 

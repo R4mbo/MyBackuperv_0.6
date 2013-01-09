@@ -8,16 +8,14 @@ import java.net.*;
 
 import java.io.File;
 /**
- * Klasa wysyłająca pojednyczny plik na wskazane gniazdko
- * Podajemy tylko gniazdko w konstrukotrze oraz nazwę pliku do wysłania w odpowiedniej metodzie
- * Teoretycznie klasa jest wielorazowego użytku, wymaga jednak testów
+ * Klasa wysy�aj�ca plik do klienta
  * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class SendBackFile {
 
     private Socket socket;
-    private OutputStream os;
-    private InputStream is;
+    private OutputStream myOutputStream;
+    private InputStream myInputStream;
     private static final int SIZE_PAKIET = conf.Conf.SIZE_PAKIET;
 
     /**
@@ -29,8 +27,8 @@ public class SendBackFile {
         this.socket = s;
 
         try {
-            os = socket.getOutputStream();
-            is = socket.getInputStream();
+            myOutputStream = socket.getOutputStream();
+            myInputStream = socket.getInputStream();
         }
         catch(IOException ex) {
 
@@ -38,14 +36,14 @@ public class SendBackFile {
     }
     public SendBackFile(InputStream in, OutputStream out) {
 
-            os = out;
-            is = in;
+            myOutputStream = out;
+            myInputStream = in;
 
 
     }
     /**
-     * Metoda wywoływana w celu przesłania pliku na zdefiniowane wcześniej ciastko
-     * Po stronie odbiorczej należy
+     * Przes�anie pliku
+     * 
      * @param plik
      * @return
      * @throws IOException
@@ -56,28 +54,24 @@ public class SendBackFile {
         /**
          * Stworzenie strumienia wyjściowego, zeby klientowi wyslac niezbędne dane o pliku
          */
-        // Długość ścieżki
-        os.write(myFile.getPath().getBytes().length);
+        //dlugosc sciezki
+        myOutputStream.write(myFile.getPath().getBytes().length);
 
-        // Ścieżka
-        os.write(myFile.getPath().getBytes());
+        // sciezka
+        myOutputStream.write(myFile.getPath().getBytes());
 
-        // Długość pliku
+        // dlugosc pliku
         String dlugosc = Long.toString(myFile.length());
         byte aaa[] = dlugosc.getBytes();
-        os.write(aaa.length);
-        os.write(aaa);
-
-        // Ilosc probek po WIELKOSC_PROBKI
-        // Nie wysylam dopelnienia, klient sam sobie je wyliczy
-        // Zakladam ze w ciele Z liczyc umie komputer :)
+        myOutputStream.write(aaa.length);
+        myOutputStream.write(aaa);
         int ile = (int)myFile.length() / SIZE_PAKIET;
         String ilee = Integer.toString(ile);
         byte[] ile_b = ilee.getBytes();
-        os.write(ile_b.length);
-        os.write(ile_b);
+        myOutputStream.write(ile_b.length);
+        myOutputStream.write(ile_b);
 
-        os.flush();
+        myOutputStream.flush();
 
 
         // wysylanie pliku
@@ -86,24 +80,24 @@ public class SendBackFile {
 		FileInputStream fis = new FileInputStream(myFile);
         for(int i = 0; i < ile; i++) {
             fis.read(data, 0 ,SIZE_PAKIET);
-            os.write(data, 0 , SIZE_PAKIET);
-         //   fos.write(data, 0 , WIELKOSC_PROBKI);
-            os.flush();
+            myOutputStream.write(data, 0 , SIZE_PAKIET);
 
-          //  System.out.write(data);
+            myOutputStream.flush();
+
+
         }
         int dopelnienie = (int)myFile.length() - ile *SIZE_PAKIET;
         byte[] tmp = new byte[dopelnienie];
-       // System.out.println(tmp.length);
+
         fis.read(tmp, 0, tmp.length);
-        os.write(tmp, 0 ,tmp.length);
-       // fos.write(tmp, 0, tmp.length);
-        os.flush();
+        myOutputStream.write(tmp, 0 ,tmp.length);
+
+        myOutputStream.flush();
         byte[] tren = new byte[4];
-        System.out.println(is.read(tren, 0, 4));
+        System.out.println(myInputStream.read(tren, 0, 4));
         
         String tr3n = new String(tren);
-        if(tr3n.equals("TrEn")) System.out.println("Plik wysłany poprawnie");
+        if(tr3n.equals("TrEn")) System.out.println("Plik wyslany poprawnie");
        return 1;
     }
 

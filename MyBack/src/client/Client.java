@@ -15,7 +15,7 @@ public class Client {
 
     Conf konf;
     MainFrame okno;
-    Connector conn;
+    Connector myConnector;
     FileContainer lista;
     private boolean isConnected;
     private Spy spy;
@@ -32,7 +32,7 @@ public class Client {
         okno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         okno.setVisible(true);
         okno.setTitle(Conf.version + " Disconnected");
-        isConnected = false;
+        isConnected = true;
         spy = new Spy(this);
 
     }
@@ -46,12 +46,11 @@ public class Client {
     }
 
     public void connect(String name, char[] pass, String host, int port) {
-        try {
-            conn = new Connector(name, pass, host, port);
-
-            if (conn.getConnection()) {
+    	isConnected = true;
+    	try {
+            myConnector = new Connector(name, pass, host, port);
+            if (myConnector.getConnection()) {
                 lista.checkRemote();
-                isConnected = true;
                 okno.setTitle(Conf.version + "Connected with " + host + ":" + port);
                 StringTokenizer st = new StringTokenizer(konf.getGodz(), ":");
 
@@ -74,7 +73,7 @@ public class Client {
     public void disconnect() {
         try {
             spy.stopSpy();
-            conn.disconnect();
+            myConnector.disconnect();
             isConnected = false;
             okno.setTitle(Conf.version + " Disconnected");
             okno.repaintPanel();
@@ -101,7 +100,7 @@ public class Client {
         try {
             int czyPotrzebnyBackup = lista.prepareBackup(); //Czy pliki wymagaj¹ Backupu
             if (czyPotrzebnyBackup > 0) {
-                int i = conn.doBackup(lista);
+                int i = myConnector.doBackup(lista);
                 if (i == 1) {
                     this.getListFromServer();
                     okno.infoDialog("Done ! Lista plików pobrana");
@@ -125,7 +124,7 @@ public class Client {
     public void przywroc() {
         okno.runBar();
         try {
-            int i = conn.przywroc();
+            int i = myConnector.przywroc();
             if (i == 1) {
                 okno.infoDialog("Transmisja zakoñczona poprawnie!");
             }
@@ -139,7 +138,7 @@ public class Client {
     }
 
     public void getFile(File plik) {
-        conn.getFile(plik);
+        myConnector.getFile(plik);
         this.getListFromServer();
         lista.createStates();
 
@@ -150,7 +149,7 @@ public class Client {
     }
 
     /**
-     * Metody zarzÄ…dzania aktualnÄ… listÄ… plikÃ³w do backupowania
+     * Aktualna lista plikow do backupu
      */
     public void listAdd(File file) {
         int i = lista.add(file);
@@ -187,8 +186,8 @@ public class Client {
     public void listDelFile(File plik) {
         lista.delFile(plik);
         try {
-            conn.delFileFromServer(plik);
-            conn.receiveList();
+            myConnector.delFileFromServer(plik);
+            myConnector.receiveList();
         } catch (NullPointerException ex) {
         }
     }
@@ -199,7 +198,7 @@ public class Client {
     }
 
     public void getListFromServer() {
-        conn.receiveList();
+        myConnector.receiveList();
     }
 
     public void refresh() {

@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 8L;
+	private static final long serialVersionUID = 1L;
 	private Client klient;
     //FileContainer lista;
     private MainPanel panel;
@@ -37,7 +37,8 @@ public class MainFrame extends JFrame {
 	private JList list;
     Settings ustawienia;
     String[] params;
-    Conf konf;
+	private Conf konf;
+   
 
     public MainFrame(Client client) {
 
@@ -50,7 +51,7 @@ public class MainFrame extends JFrame {
 
         JMenu menuFile = new JMenu("Plik");
         menuBar.add(menuFile);
-        JMenuItem menuFileOpen = new JMenuItem("Otwórz");
+        JMenuItem menuFileOpen = new JMenuItem("Otworz");
         menuFileOpen.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -91,7 +92,7 @@ public class MainFrame extends JFrame {
 
         JMenu menuKlient = new JMenu("Klient");
         menuBar.add(menuKlient);
-        JMenuItem menuKlientConnect = new JMenuItem("Połącz z...");
+        JMenuItem menuKlientConnect = new JMenuItem("Polacz z...");
         menuKlientConnect.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent a) {
@@ -102,7 +103,7 @@ public class MainFrame extends JFrame {
         });
         menuKlient.add(menuKlientConnect);
 
-        JMenuItem menuKlientDisConnect = new JMenuItem("Rozłącz");
+        JMenuItem menuKlientDisConnect = new JMenuItem("Rozlacz");
         menuKlientDisConnect.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent a) {
@@ -140,7 +141,7 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
 
 
-        edytuj = new JButton("Przywróc wszystko");
+        edytuj = new JButton("Przywroc wszystko");
         edytuj.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
@@ -165,14 +166,14 @@ public class MainFrame extends JFrame {
             }
         });
 
-        usun = new JButton("Usuń");
+        usun = new JButton("Usun");
         usun.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            @SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent ae) {
                 runBar();
                 klient.userAction(usun.getText());
-                @SuppressWarnings("deprecation")
-				Object[] values = list.getSelectedValues();
+                Object[] values = list.getSelectedValues();
                 for (Object plik : values) {
                     klient.listDelFile(new File((String) plik));
                     model.removeElement(plik);
@@ -182,15 +183,15 @@ public class MainFrame extends JFrame {
                 stopBar();
             }
         });
-        przywroc = new JButton("Przywróć plik");
+        przywroc = new JButton("Przywroc plik");
         przywroc.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent ae) {
+            @SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent ae) {
                 klient.userAction(przywroc.getText());
 
                 runBar();
-                @SuppressWarnings("deprecation")
-				Object[] values = list.getSelectedValues();
+                Object[] values = list.getSelectedValues();
                 for (Object plik : values) {
                     klient.getFile(new File((plik.toString())));
                 }
@@ -218,10 +219,6 @@ public class MainFrame extends JFrame {
 
             public void actionPerformed(ActionEvent ae) {
                 klient.userAction(synchronizuj.getText());
-                /* Object[] values = list.getSelectedValues();
-                for(Object value: values) {
-                System.out.println((String)value);
-                }*/
                 klient.refresh();
                 list.repaint();
 
@@ -269,7 +266,7 @@ public class MainFrame extends JFrame {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID =6L;
+		private static final long serialVersionUID = 1L;
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public MainPanel() {
@@ -305,7 +302,7 @@ public class MainFrame extends JFrame {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID = 6L;
+		private static final long serialVersionUID = 1L;
 
 		public StatusPanel() {
 
@@ -340,7 +337,7 @@ public class MainFrame extends JFrame {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID = 6L;
+		private static final long serialVersionUID = 1L;
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public CenterPanel() {
             this.setSize(700, 500);
@@ -350,23 +347,17 @@ public class MainFrame extends JFrame {
                 model.addElement(pliki.get(i).toString());
             }
             list = new JList(model);
-            // JScrollPane scroll = new JScrollPane();
-            // add(scroll);
-            //scroll.setSize(700,500);
-            // scroll.add(list);
+           
             JScrollPane scrollPane = new JScrollPane(list);
             list.setSize(500, 500);
             add(scrollPane);
-
-            //add(list);
         }
         @SuppressWarnings("rawtypes")
 		ArrayList temp = klient.listGetContainer();
     }
 
     /**
-     * Klasa wygenerowana przez NetBeans, okienko do logowania
-     * akcja naciśnięcia buttona połącz etc...
+     * Klasa wygenerowana przez Srodowisko NetBeans, okienko do logowania
      */
     @SuppressWarnings("serial")
 	public class LoginForm extends javax.swing.JFrame {
@@ -376,7 +367,11 @@ public class MainFrame extends JFrame {
             initComponents();
         }
 
-
+        /** This method is called from within the constructor to
+         * initialize the form.
+         * WARNING: Do NOT modify this code. The content of this method is
+         * always regenerated by the Form Editor.
+         */
         // <editor-fold defaultstate="collapsed" desc="Generated Code">
         private void initComponents() {
 
@@ -400,22 +395,19 @@ public class MainFrame extends JFrame {
 
             jTextField4.setText(params[2]);
 
-            jLabel1.setText("Użytkownik");
+            jLabel1.setText("Uzytkownik");
 
-            jLabel2.setText("Hasło");
+            jLabel2.setText("Haslo");
 
             jLabel3.setText("host");
 
             jLabel4.setText("port");
 
-            jButton1.setText("Połącz");
+            jButton1.setText("Po��cz");
             jPasswordField1.setText("pass");
-            jLabel5.setText("Podaj parametry do połączeni z serwerem");
+            jLabel5.setText("Parametry do po��czenia z serwerem");
 
-            /**
-             * Obsługa przycisku
-             * Wysłanie do obiektu typu Client informacji o próbie nawiązania połączenia...
-             */
+//wys�anie ��dania
             jButton1.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -429,7 +421,7 @@ public class MainFrame extends JFrame {
                         klient.connect(jTextField1.getText(), jPasswordField1.getPassword(), jTextField3.getText(), Integer.parseInt(jTextField4.getText()));
 
                     } catch (Exception ex) {
-                        //errorDialog(3, "Wprowadzone dane są niepoprawne");
+                        //errorDialog(3, "Wprowadzone dane s� niepoprawne");
                     }
                     setVisible(false);
 
@@ -492,9 +484,10 @@ public class MainFrame extends JFrame {
          * always regenerated by the Form Editor.
          */
         
-
+        // <editor-fold defaultstate="collapsed" desc="Generated Code">
         private void initComponents() {
             setTitle("Ustawienia");
+//        params = konf.getTable();
             jLabel1 = new javax.swing.JLabel();
             jTextField1 = new javax.swing.JTextField();
             jTextField2 = new javax.swing.JTextField();
@@ -592,7 +585,7 @@ public class MainFrame extends JFrame {
                 int godz_min = Integer.parseInt(st.nextToken());
                 klient.setSpy(mode, Integer.parseInt(jTextField1.getText()), godz, godz_min);
             } catch (Exception ex) {
-                errorDialog("Błąd wprowadzonych danych");
+                errorDialog("B��d wprowadzonych danych");
             }
         }
 
@@ -612,12 +605,12 @@ public class MainFrame extends JFrame {
     }
 
     public void errorDialog(String msg) {
-        JOptionPane.showMessageDialog(null, msg, "Błąd!", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, msg, "Blad!", JOptionPane.ERROR_MESSAGE);
 
     }
 
     public void errorDialog(int no, String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Błąd #" + no, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, msg, "Blad #" + no, JOptionPane.ERROR_MESSAGE);
     }
 
     public void infoDialog(String msg) {
@@ -680,14 +673,10 @@ public class MainFrame extends JFrame {
         }
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "serial" })
 	class ComplexCellRenderer extends JComponent implements ListCellRenderer {
 
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+        protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
         Icon theIcon = null;
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -699,16 +688,16 @@ public class MainFrame extends JFrame {
                 theIcon = new DiamondIcon(Color.red);
                 renderer.setBackground(Color.red);
                 renderer.setForeground(Color.white);
-                renderer.setToolTipText("Plik zmienił położenie lub został usunięty!");
+                renderer.setToolTipText("Plik zmienil polozenie lub zostal usuniety!");
             } else if (state == 1) {
                 theIcon = new DiamondIcon(Color.green);
-                renderer.setToolTipText("Lokalna i zdalna kopia są identyczne.");
+                renderer.setToolTipText("Lokalna i zdalna kopia sa indentyczne.");
             } else if (state == 2) {
                 theIcon = new DiamondIcon(Color.orange);
-                renderer.setToolTipText("Kopia lokalna różni się od kopii zdalnej.");
+                renderer.setToolTipText("Kopia lokalna roznila sie od kopii zdalnejj.");
             } else {
                 theIcon = new DiamondIcon(Color.gray);
-                renderer.setToolTipText("Plik nie został jeszcze zbackupowany");
+                renderer.setToolTipText("Plik nie zostal zbackowqny");
             }
             renderer.setIcon(theIcon);
             renderer.setText(value.toString());
@@ -736,7 +725,7 @@ public class MainFrame extends JFrame {
          * always regenerated by the Form Editor.
          */
         
-
+        // <editor-fold defaultstate="collapsed" desc="Generated Code">
         private void initComponents() {
 
             jLabel1 = new javax.swing.JLabel();
@@ -752,11 +741,11 @@ public class MainFrame extends JFrame {
 
             jLabel2.setText("Projekt zaliczeniowy z przedmiotu OPA");
 
-            jLabel3.setText("Obiektowe programowanie aplikacji rozproszonych i wsp�bie�nych");
+            jLabel3.setText("Semestr 12Z");
 
-            jLabel4.setText("Semestr 12Z");
+            jLabel4.setText("Piotr Milewski");
 
-            jLabel5.setText("K.Rembiszewski , P.Milewski");
+            jLabel5.setText("Krzysztof Rembiszewki");
 
             jButton1.setText("Zamknij");
             jButton1.addActionListener(new ActionListener() {
