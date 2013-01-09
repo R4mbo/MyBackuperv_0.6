@@ -11,7 +11,7 @@ import java.io.File;
  * Klasa wysyłająca pojednyczny plik na wskazane gniazdko
  * Podajemy tylko gniazdko w konstrukotrze oraz nazwę pliku do wysłania w odpowiedniej metodzie
  * Teoretycznie klasa jest wielorazowego użytku, wymaga jednak testów
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class SendBackFile {
 

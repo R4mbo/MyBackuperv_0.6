@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 /**
  * Klasa która co określony przez użytkownika czas dokonuje backupu
  * Może uda się to zrobić np. o ustalonej z góry porze...
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class Spy {
 

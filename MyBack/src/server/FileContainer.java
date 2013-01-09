@@ -11,7 +11,7 @@ import java.io.*;
 /**
  * Klasa przechowująca listę plików zbackupowanych/do backupu
  * Była poprawka związana z zapisywaniem dobrych lastmodify do pliku
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class FileContainer {
 

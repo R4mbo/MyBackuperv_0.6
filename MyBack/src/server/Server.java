@@ -10,7 +10,7 @@ import java.io.File;
 
 /**
  * Klasa przyjmujÄ�ca polecenia pisane serwerowi z palca
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class Server {
 

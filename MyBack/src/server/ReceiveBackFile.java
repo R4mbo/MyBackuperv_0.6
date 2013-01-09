@@ -12,7 +12,7 @@ import java.nio.channels.FileLock;
  * Klasa do odbierania pliku
  * Po nawiązaniu połączenia trzeba stworzyć jej obiekt przekazując gniazdko
  *
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class ReceiveBackFile {
 

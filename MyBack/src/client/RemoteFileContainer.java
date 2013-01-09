@@ -9,7 +9,7 @@ import java.io.*;
  * Zawiera sciezke dostepu do pliku w lokalnym systemie plikow
  * Date modyfikacji pliku na serwerze
  * Status pliku mowiacy o rodzaju jego backupi
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class RemoteFileContainer {
 
