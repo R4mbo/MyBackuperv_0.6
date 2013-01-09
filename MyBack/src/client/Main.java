@@ -14,9 +14,12 @@ import java.io.File;
  */
 public class Main {
     public static void main(String[] args) {
-        if (args.length > 0 && args[0].equals("serve")) {
+    	int portNo = 8000;
+    	if (args.length > 0 && args[0].equals("serve")) {
             if (args.length == 1) {
                 System.out.println("wlacz serwer");
+                @SuppressWarnings("unused")
+				server.Server srv = new server.Server(portNo);
 
             } else if (args.length == 2) {
                 System.out.println("wlacz serwer na innym porcie");

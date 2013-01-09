@@ -429,7 +429,7 @@ public class MainFrame extends JFrame {
                         klient.connect(jTextField1.getText(), jPasswordField1.getPassword(), jTextField3.getText(), Integer.parseInt(jTextField4.getText()));
 
                     } catch (Exception ex) {
-                        errorDialog(3, "Wprowadzone dane są niepoprawne");
+                        //errorDialog(3, "Wprowadzone dane są niepoprawne");
                     }
                     setVisible(false);
 

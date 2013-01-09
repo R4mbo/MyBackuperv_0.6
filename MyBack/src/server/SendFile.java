@@ -22,7 +22,7 @@ public class SendFile {
     private Socket socket;
     private OutputStream os;
     private InputStream is;
-    private static final int SIZE_PAKIET = conf.Conf.SIZE_PAKIET;
+    private static final int SIZE_PAKIET =conf.Conf.SIZE_PAKIET;
 
     /**
      * Konstruktor klasy do wysyłania plików

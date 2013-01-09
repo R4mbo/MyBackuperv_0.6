@@ -1,4 +1,7 @@
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package server;
 
 import java.io.*;
@@ -11,9 +14,15 @@ import java.io.File;
  */
 public class Server {
 
-    public static void main(String args[]) {
+    @SuppressWarnings("unused")
+	public static void main(String args[]) {
+      
+        Server server = new Server(8000);
     }
+    @SuppressWarnings("unused")
+	private int port;
     public Server(int port) {
+        this.port = port;
         System.out.println("Serwer uruchomiony na porcie " + port);
         Runnable r = new SrvWait(port);
         Thread t = new Thread(r);
@@ -50,13 +59,13 @@ class SrvWait implements Runnable {
         this.port = port;
     }
 
-    public void run() {
+    @SuppressWarnings("resource")
+	public void run() {
         try {
             /**
              * Tworzenie gniazdka na porcie 8000;
              */
-            @SuppressWarnings("resource")
-			ServerSocket s = new ServerSocket(port);
+            ServerSocket s = new ServerSocket(port);
             int i = 0;
 
             /**
@@ -92,7 +101,8 @@ class SrvThread implements Runnable {
         sock = s;
     }
 
-    public void run() {
+    @SuppressWarnings("unused")
+	public void run() {
         try {
             try {
                 this.is = sock.getInputStream();
@@ -196,6 +206,7 @@ class SrvThread implements Runnable {
                         }
                         lista.saveList();
                         is.read(hello, 0, 3);
+                        String koniec = new String(hello);
 
 
                     }
@@ -252,6 +263,7 @@ class SrvThread implements Runnable {
 
                             wyslij.sendFile(remote, sciezka);
                              is.read(hello, 0, 3);
+                        String koniec = new String(hello);
 
                     }
                     else if(choose.equals("kon")) {
@@ -264,7 +276,11 @@ class SrvThread implements Runnable {
 
 
                 }
-        
+                /*
+                SendFile send = new SendFile(sock);
+                send.sendFile("plik.jpg");
+                send.sendFile("edituser.php");
+                 */
             } catch (Exception ex) {
                 //ex.printStackTrace();
             } finally {
