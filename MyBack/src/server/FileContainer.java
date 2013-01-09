@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package server;
 
 import java.util.*;
 import java.io.*;
-import java.io.File.*;
 
 /**
  * Klasa przechowująca listę plików zbackupowanych/do backupu
@@ -15,8 +11,10 @@ import java.io.File.*;
  */
 public class FileContainer {
 
-    private ArrayList pliki;        // lokalizacja w lokalnym systemie plikow uzytkownika
-    private ArrayList naSerwerze; // lokalizacja danego pliku w systemie plikow serwera
+    @SuppressWarnings("rawtypes")
+	private ArrayList pliki;        // lokalizacja w lokalnym systemie plikow uzytkownika
+    @SuppressWarnings("rawtypes")
+	private ArrayList naSerwerze; // lokalizacja danego pliku w systemie plikow serwera
     private File listaPlikow;       // plik z lista plikow
     PrintWriter out;
     BufferedReader in;
@@ -53,7 +51,8 @@ public class FileContainer {
 
     }
 
-    public int add(File file) {
+    @SuppressWarnings("unchecked")
+	public int add(File file) {
         if (pliki.contains(file)) {
             this.print("Plik znajduje się już na liście");
             return 0;
@@ -94,7 +93,8 @@ public class FileContainer {
         return ((File) pliki.get(no)).getPath();
     }
 
-    public ArrayList getContainer() {
+    @SuppressWarnings("rawtypes")
+	public ArrayList getContainer() {
         return pliki;
     }
 
@@ -106,7 +106,8 @@ public class FileContainer {
         System.out.println("FileContainer: " + tekst);
     }
 
-    private ArrayList loadContainer() {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private ArrayList loadContainer() {
         String path;
         ArrayList returnable = new ArrayList();
         naSerwerze = new ArrayList();

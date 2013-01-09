@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package server;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.io.File;
 
 /**
@@ -16,12 +12,8 @@ import java.io.File;
 public class Server {
 
     public static void main(String args[]) {
-      
-        Server server = new Server(8000);
     }
-    private int port;
     public Server(int port) {
-        this.port = port;
         System.out.println("Serwer uruchomiony na porcie " + port);
         Runnable r = new SrvWait(port);
         Thread t = new Thread(r);
@@ -63,7 +55,8 @@ class SrvWait implements Runnable {
             /**
              * Tworzenie gniazdka na porcie 8000;
              */
-            ServerSocket s = new ServerSocket(port);
+            @SuppressWarnings("resource")
+			ServerSocket s = new ServerSocket(port);
             int i = 0;
 
             /**
@@ -203,7 +196,6 @@ class SrvThread implements Runnable {
                         }
                         lista.saveList();
                         is.read(hello, 0, 3);
-                        String koniec = new String(hello);
 
 
                     }
@@ -260,7 +252,6 @@ class SrvThread implements Runnable {
 
                             wyslij.sendFile(remote, sciezka);
                              is.read(hello, 0, 3);
-                        String koniec = new String(hello);
 
                     }
                     else if(choose.equals("kon")) {
@@ -273,11 +264,7 @@ class SrvThread implements Runnable {
 
 
                 }
-                /*
-                SendFile send = new SendFile(sock);
-                send.sendFile("plik.jpg");
-                send.sendFile("edituser.php");
-                 */
+        
             } catch (Exception ex) {
                 //ex.printStackTrace();
             } finally {

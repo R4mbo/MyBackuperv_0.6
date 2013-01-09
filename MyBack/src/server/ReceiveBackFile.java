@@ -1,11 +1,8 @@
-/*
 
- */
 package server;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.io.File;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -66,8 +63,6 @@ public class ReceiveBackFile {
     }
 
     public File receiveFile() throws IOException {
-        long start = System.currentTimeMillis();
-        long current = 0;
         // Dlugosc sciezki
         int wielkosc;
         do {
@@ -118,7 +113,6 @@ public class ReceiveBackFile {
             int size = is.read(c, 0, WIELKOSC_PROBKI);
             fos.write(c, 0, size);
             fos.flush();
-            current += size;
         }
 
         int dopelnienie = dlugosc_pliku - WIELKOSC_PROBKI * ile;
@@ -153,17 +147,8 @@ public class ReceiveBackFile {
 
         fos.flush();
         fos.close();
-
-
-
-
         System.out.println(myFile.hashCode());
-        long stop = System.currentTimeMillis();
-//        double przepl = dlugosc_pliku/(stop-start);
-//      System.out.println(przepl);
 
-
-        //is.close();
         return temporary;
     }
 }

@@ -5,7 +5,6 @@ package server;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.io.File;
 /**
  * Klasa wysyłająca pojednyczny plik na wskazane gniazdko
@@ -82,7 +81,8 @@ public class SendBackFile {
 
         // wysylanie pliku
         byte[] data = new byte[SIZE_PAKIET];
-        FileInputStream fis = new FileInputStream(myFile);
+        @SuppressWarnings("resource")
+		FileInputStream fis = new FileInputStream(myFile);
         for(int i = 0; i < ile; i++) {
             fis.read(data, 0 ,SIZE_PAKIET);
             os.write(data, 0 , SIZE_PAKIET);
