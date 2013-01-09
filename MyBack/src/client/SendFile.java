@@ -1,11 +1,8 @@
-/**
 
- */
 package client;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.io.File;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -23,7 +20,7 @@ public class SendFile {
     private Socket socket;
     private OutputStream os;
     private InputStream is;
-    private static final int WIELKOSC_PROBKI = Conf.WIELKOSC_PROBKI;
+    private static final int SIZE_PAKIET = Conf.SIZE_PAKIET;
 
     /**
      * Konstruktor klasy do wysyłania plików
@@ -76,7 +73,7 @@ public class SendFile {
         // Ilosc probek po WIELKOSC_PROBKI
         // Nie wysylam dopelnienia, klient sam sobie je wyliczy
         // Zakladam ze w ciele Z liczyc umie komputer :)
-        int ile = (int) myFile.length() / WIELKOSC_PROBKI;
+        int ile = (int) myFile.length() / SIZE_PAKIET;
         String ilee = Integer.toString(ile);
         byte[] ile_b = ilee.getBytes();
         os.write(ile_b.length);
@@ -86,17 +83,17 @@ public class SendFile {
 
 
         // wysylanie pliku
-        byte[] data = new byte[WIELKOSC_PROBKI];
+        byte[] data = new byte[SIZE_PAKIET];
         FileInputStream fis = new FileInputStream(myFile);
         for (int i = 0; i < ile; i++) {
-            fis.read(data, 0, WIELKOSC_PROBKI);
-            os.write(data, 0, WIELKOSC_PROBKI);
+            fis.read(data, 0, SIZE_PAKIET);
+            os.write(data, 0, SIZE_PAKIET);
             //   fos.write(data, 0 , WIELKOSC_PROBKI);
             os.flush();
 
             //  System.out.write(data);
         }
-        int dopelnienie = (int) myFile.length() - ile * WIELKOSC_PROBKI;
+        int dopelnienie = (int) myFile.length() - ile * SIZE_PAKIET;
         byte[] tmp = new byte[dopelnienie];
         // System.out.println(tmp.length);
         fis.read(tmp, 0, tmp.length);

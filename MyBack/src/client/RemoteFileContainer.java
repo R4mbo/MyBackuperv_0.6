@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package client;
 
 import java.util.*;
 import java.io.*;
-import java.io.File.*;
-import javax.swing.*;
 
 /**
  * Klasa przechowująca informacje o plikach zdalnych
@@ -21,14 +16,17 @@ public class RemoteFileContainer {
     String filename = "list_z_serwera";
     private File listaPlikow;
     BufferedReader in;
-    private ArrayList pliki;
-    private ArrayList timestamp;
+    @SuppressWarnings("rawtypes")
+	private ArrayList pliki;
+    @SuppressWarnings("rawtypes")
+	private ArrayList timestamp;
 
     /**
      * Konstrutktor, odpalany dopiero po połączeniu z serwerem
      *
      */
-    public RemoteFileContainer() {
+    @SuppressWarnings("rawtypes")
+	public RemoteFileContainer() {
 
 
         timestamp = new ArrayList();
@@ -52,19 +50,18 @@ public class RemoteFileContainer {
      * �?adowanie kontenera danymi
      * @return
      */
-    private ArrayList loadContainer() {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private ArrayList loadContainer() {
         timestamp.clear();
         String path;
         ArrayList returnable = new ArrayList();
         try {
-            int i = 0;
             while ((path = in.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(path, ";");
                 path = st.nextToken();
                 File tmp = new File(path);
                 returnable.add(tmp);
                 timestamp.add(st.nextToken());
-                i++;
             }
         } catch (Exception ex) {
             ex.printStackTrace();

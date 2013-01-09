@@ -5,7 +5,7 @@
 package client;
 
 import java.util.Calendar;
-import java.util.Date;
+
 import java.text.SimpleDateFormat;
 
 /**
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 public class Spy {
 
     private Client klient;
-    private SpyThread watek;
     Thread t;
     Runnable r;
 
@@ -32,7 +31,8 @@ public class Spy {
         t.start();
     }
 
-    public void stopSpy() {
+    @SuppressWarnings("deprecation")
+	public void stopSpy() {
         t.stop();
     }
 

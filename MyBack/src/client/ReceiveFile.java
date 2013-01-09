@@ -1,11 +1,8 @@
-/*
 
- */
 package client;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.io.File;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -13,17 +10,17 @@ import java.nio.channels.FileLock;
 import conf.Conf;
 
 /**
- * Klasa do odbierania pliku
+ * Odbieranie pliku
  * Po nawiązaniu połączenia trzeba stworzyć jej obiekt przekazując gniazdko
  *
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class ReceiveFile {
 
     Socket socket;
     InputStream is;
     OutputStream os;
-    private static final int WIELKOSC_PROBKI = Conf.WIELKOSC_PROBKI;
+    private static final int SIZE_PAKIET = Conf.SIZE_PAKIET;
 
     @Deprecated
     public ReceiveFile(Socket sock) throws IOException {
@@ -45,8 +42,6 @@ public class ReceiveFile {
     }
 
     public File receiveFile() throws IOException {
-        long start = System.currentTimeMillis();
-        long current = 0;
         // Dlugosc sciezki
         int wielkosc;
         do {
@@ -88,17 +83,16 @@ public class ReceiveFile {
         myFile = this.makePath(myFile);
         FileOutputStream fos = new FileOutputStream(myFile);
 
-        byte[] c = new byte[WIELKOSC_PROBKI];
+        byte[] c = new byte[SIZE_PAKIET];
 
 
         for (int i = 0; i < ile; i++) {
-            int size = is.read(c, 0, WIELKOSC_PROBKI);
+            int size = is.read(c, 0, SIZE_PAKIET);
             fos.write(c, 0, size);
             fos.flush();
-            current += size;
         }
 
-        int dopelnienie = dlugosc_pliku - WIELKOSC_PROBKI * ile;
+        int dopelnienie = dlugosc_pliku - SIZE_PAKIET * ile;
 
         byte[] tmp = new byte[dopelnienie];
         int size = is.read(tmp, 0, dopelnienie);
@@ -121,11 +115,6 @@ public class ReceiveFile {
 
 
         System.out.println(myFile.hashCode());
-        long stop = System.currentTimeMillis();
-//        double przepl = dlugosc_pliku/(stop-start);
-//      System.out.println(przepl);
-
-
         //is.close();
         return myFile;
     }
@@ -146,8 +135,6 @@ public class ReceiveFile {
     }
 
     public File receiveList() throws IOException {
-        long start = System.currentTimeMillis();
-        long current = 0;
         // Dlugosc sciezki
         int wielkosc;
         do {
@@ -188,17 +175,16 @@ public class ReceiveFile {
         File myFile = new File("list_z_serwera");
         FileOutputStream fos = new FileOutputStream(myFile);
 
-        byte[] c = new byte[WIELKOSC_PROBKI];
+        byte[] c = new byte[SIZE_PAKIET];
 
 
         for (int i = 0; i < ile; i++) {
-            int size = is.read(c, 0, WIELKOSC_PROBKI);
+            int size = is.read(c, 0, SIZE_PAKIET);
             fos.write(c, 0, size);
             fos.flush();
-            current += size;
         }
 
-        int dopelnienie = dlugosc_pliku - WIELKOSC_PROBKI * ile;
+        int dopelnienie = dlugosc_pliku - SIZE_PAKIET * ile;
 
         byte[] tmp = new byte[dopelnienie];
         int size = is.read(tmp, 0, dopelnienie);
@@ -217,12 +203,6 @@ public class ReceiveFile {
 
 
         System.out.println(myFile.hashCode());
-        long stop = System.currentTimeMillis();
-//        double przepl = dlugosc_pliku/(stop-start);
-//      System.out.println(przepl);
-
-
-        //is.close();
         return myFile;
     }
 }

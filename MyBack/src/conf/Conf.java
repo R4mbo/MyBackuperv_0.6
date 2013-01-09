@@ -14,7 +14,7 @@ import java.io.FileWriter;
 
 public final class Conf {
 
-    public static final int WIELKOSC_PROBKI = 1460; //Wielkosc pakietu
+    public static final int SIZE_PAKIET = 1460; //Wielkosc pakietu
     public static final String REMOTE_ADDR = new String("localhost"); //Adres Serwera
     public static final int PORT = 8000; //Port serwera
     public static final String version = new String("MyBackUper v.0.6"); 

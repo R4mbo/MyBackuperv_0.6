@@ -1,8 +1,8 @@
-
 package client;
 
 import java.util.*;
 import java.io.*;
+
 import javax.swing.*;
 
 /**
@@ -16,27 +16,27 @@ public class FileContainer {
      * Dotyczy plikow lokalnych
      */
     static String filename = "list";
-    private ArrayList pliki;        // lista plików na UI
-    private ArrayList doBackupu;    // dynamicznie generowana lista plikow do backupu
-    private File listaPlikow;
+    private ArrayList<File> pliki;        // lista plikow
+    private ArrayList<File> doBackupu;    // generowana lista plikow (do backupu)
+    private File listofFiles;
     PrintWriter out;
     BufferedReader in;
-    private ArrayList status; // status pliku w zdalnym systemie
-    RemoteFileContainer rfc;  // pojemnik na elementy w zdalnym serwerze (tylko dowiązania symboliczne i timestampy
+    private ArrayList<Integer> status; // status pliku
+    RemoteFileContainer rfc;  // dowiazanie
 
     public FileContainer() {
-        status = new ArrayList();
-        listaPlikow = new File(filename);
-        doBackupu = new ArrayList();
+        status = new ArrayList<Integer>();
+        listofFiles = new File(filename);
+        doBackupu = new ArrayList<File>();
 
         try {
-            if (!listaPlikow.isFile()) {
-                listaPlikow.createNewFile();
+            if (!listofFiles.isFile()) {
+                listofFiles.createNewFile();
             }
-            in = new BufferedReader(new FileReader(listaPlikow));
+            in = new BufferedReader(new FileReader(listofFiles));
             pliki = this.loadContainer();
 
-            out = new PrintWriter(new FileWriter(listaPlikow), true);
+            out = new PrintWriter(new FileWriter(listofFiles), true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class FileContainer {
 
     public int add(File file) {
         if (pliki.contains(file)) {
-            this.print("Plik znajduje się już na liście");
+            this.print("Plik jest ju� na li�cie");
             return 0;
         } else {
             if (file.isDirectory()) {
@@ -58,7 +58,7 @@ public class FileContainer {
                 return 1;
             } else if (file.isFile()) {
                 pliki.add(file);
-                this.print("Użytkownik dodał plik " + file.toString());
+                this.print("U�ytkownik dodal plik " + file.toString());
                 out.println(file.toString());
                 return 1;
             }
@@ -66,7 +66,8 @@ public class FileContainer {
         }
     }
 
-    public int add(File file, DefaultListModel model) {
+ 
+	public int add(File file, DefaultListModel<String> model) {
         if (pliki.contains(file)) {
             this.print("Plik znajduje się już na liście");
             return 0;
@@ -91,10 +92,10 @@ public class FileContainer {
     }
 
     public String get(int no) {
-        return ((File) pliki.get(no)).getPath();
+        return pliki.get(no).getPath();
     }
 
-    public ArrayList getContainer() {
+    public ArrayList<File> getContainer() {
         return pliki;
     }
 
@@ -106,9 +107,9 @@ public class FileContainer {
         System.out.println("FileContainer: " + tekst);
     }
 
-    private ArrayList loadContainer() {
+    private ArrayList<File> loadContainer() {
         String path;
-        ArrayList returnable = new ArrayList();
+        ArrayList<File> returnable = new ArrayList<File>();
         try {
             while ((path = in.readLine()) != null) {
                 returnable.add(new File(path));
@@ -127,13 +128,13 @@ public class FileContainer {
             in.close();
 
             try {
-                listaPlikow.delete();
-                listaPlikow.createNewFile();
+                listofFiles.delete();
+                listofFiles.createNewFile();
 
-                out = new PrintWriter(new FileWriter(listaPlikow), true);
-                in = new BufferedReader(new FileReader(listaPlikow));
+                out = new PrintWriter(new FileWriter(listofFiles), true);
+                in = new BufferedReader(new FileReader(listofFiles));
                 for (int i = 0; i < pliki.size(); i++) {
-                    out.println(((File) pliki.get(i)).getAbsolutePath());
+                    out.println(pliki.get(i).getAbsolutePath());
                 }
             } finally {
             }
@@ -146,17 +147,11 @@ public class FileContainer {
 
     public void delFile(File plik) {
         System.out.println(pliki.remove(plik));
-        /*for(int i = 0; i < pliki.size(); i++) {
-        System.out.println(pliki.get(i));
-
-        }*/
         this.createStates();
     }
 
     /**
-     *  Metoda ktora porowna sobie pliki lokalne i zdalne
-     *  dzieki czemu bedziemy znali ich status
-     *  Idziemy wg. plikow lokalnych...
+     *  Porownanie plikow lokalnych z zdalnymi
      */
     public void checkRemote() {
         rfc = new RemoteFileContainer();
@@ -165,8 +160,7 @@ public class FileContainer {
     }
 
     /**
-     * Metoda która tworzy stany dla wszystkich plików na zdalnym serwerze
-     * Dzięki temu wiemy czy plik jest aktualny czy nie
+ Tworzenie stanow plik�w na zdalnym serwerze
      */
     public void createStates() {
         status.clear();
@@ -179,20 +173,20 @@ public class FileContainer {
     private int createFileStatus(int index) {
         try {
             rfc.reload();
-            long lastmod = rfc.getLastMod(pliki.get(index).toString());
-            long lastLocal = (((File) pliki.get(index)).lastModified());
-            System.out.println(lastmod);
+            long ostatniamodyfikacja = rfc.getLastMod(pliki.get(index).toString());
+            long lastLocal = (pliki.get(index).lastModified());
+            System.out.println(ostatniamodyfikacja);
             System.out.println(lastLocal);
-            if (!((File) pliki.get(index)).exists()) {
+            if (!pliki.get(index).exists()) {
                 return 0;
             }
-            if (lastmod == -1) {
+            if (ostatniamodyfikacja == -1) {
                 return 3; // plik nie istnieje w backupie
-            } else if (lastmod >= lastLocal) {
-                // plik w backupie jest rownolatkiem lub mlodszy niz na dysku
+            } else if (ostatniamodyfikacja >= lastLocal) {
+                // plik w backupie jest mlodszy 
                 return 1;
-            } else if (lastmod < lastLocal) {
-                // plik w backupie jest starszy niz na dysku
+            } else if (ostatniamodyfikacja < lastLocal) {
+                // plik w backupie jest starszy 
                 return 2;
             }
         } catch (Exception ex) {
@@ -217,9 +211,7 @@ public class FileContainer {
     }
 
     /**
-     * Metoda przygotowująca tablicę doBackupu do backupu
-     * Wybiera tylko elementy, które wymagają wysłania na serwer
-     * (spełnione jedno z założeń projektu)
+     Przygotowanie tablicy plikow do wyslania
      */
     public int prepareBackup() {
         doBackupu.clear();
@@ -234,9 +226,8 @@ public class FileContainer {
     }
 
     /**
-     * To będzie metoda do przesyłania plików, które użytkownik sobie zaznaczył
-     * na liście.
-     * @param pliki Bezpośrednia tablica Objectów, którą generuje zaznaczenie na JList
+     *Przygotowanie plikow do wyslania przez klienta
+     * @param pliki Tablica obiektow
      */
     public void prepareBackup(Object[] pliki) {
     }
@@ -246,7 +237,7 @@ public class FileContainer {
     }
 
     public String getBackup(int no) {
-        return ((File) doBackupu.get(no)).getPath();
+        return doBackupu.get(no).getPath();
     }
 
     public void reloadRemoteList() {

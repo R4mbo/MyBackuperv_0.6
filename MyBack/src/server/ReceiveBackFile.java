@@ -20,7 +20,7 @@ public class ReceiveBackFile {
     Socket socket;
     InputStream is;
     OutputStream os;
-    private static final int WIELKOSC_PROBKI = conf.Conf.WIELKOSC_PROBKI;
+    private static final int WIELKOSC_PROBKI = conf.Conf.SIZE_PAKIET;
     String name;
     String pass;
 

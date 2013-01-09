@@ -21,8 +21,8 @@ public class Client {
     private Spy spy;
 
     /**
-     * Konstruktor, jedyny
-     * Tworzy ramkę dla klienta i uruchamia wątek połączeniowy;
+     * Konstruktor
+     *
      */
     public Client() {
         lista = new FileContainer();
@@ -159,7 +159,8 @@ public class Client {
         }
     }
 //To mo�na poprawic
-    public void listAdd(File file, @SuppressWarnings("rawtypes") DefaultListModel model) {
+    @SuppressWarnings("unchecked")
+	public void listAdd(File file, @SuppressWarnings("rawtypes") DefaultListModel model) {
         int i = lista.add(file, model);
         if (i == 0) {
             okno.infoDialog("Plik " + file.getName() + "\n znajduje sie na liscie");

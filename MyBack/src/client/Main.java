@@ -10,44 +10,16 @@ import java.io.File;
 
 /**
  *
- * @author Ostros
+ * @author Piotr Milewski & Krzysztof Rembiszewski
  */
 public class Main {
-
-    /**
-     * Główna klasa programu, wywołuje uruchomienie Klienta, nie robi nic szczegolnego
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        int portNo = 8000;
-        /*
-        if ((args.length > 0) && (args[0].equals("serve"))) {
-        if(args.length == 2) {
-        portNo = Integer.parseInt(args[1]);
-        }
-        server.Server srv = new server.Server(portNo);
-        }
-        else if ((args.length > 0) && (args[1].equals("adduser"))) {
-        File path = new File(System.getProperty("user.dir") + "\\back\\" + args[2] + "_" + args[3] + "\\");
-        path.mkdirs();
-        path = new File(path.getAbsolutePath() + "\\list");
-        try {
-        path.createNewFile();
-        }
-        catch(Exception ex) {
-        ex.printStackTrace();
-        }
-        }
-         */
         if (args.length > 0 && args[0].equals("serve")) {
             if (args.length == 1) {
                 System.out.println("wlacz serwer");
-                server.Server srv = new server.Server(8000);
 
             } else if (args.length == 2) {
                 System.out.println("wlacz serwer na innym porcie");
-                portNo = Integer.parseInt(args[1]);
-                server.Server srv = new server.Server(portNo);
             } else if (args.length == 4 && args[1].endsWith("adduser")) {
                 System.out.println("dodaj uzytkownika");
                 File path = new File(System.getProperty("user.dir") + "\\back\\" + args[2] + "_" + args[3] + "\\");
@@ -96,19 +68,8 @@ public class Main {
             }
             final PopupMenu popup = new PopupMenu();
 
-            //final TrayIcon trayIcon =
-                  //  new TrayIcon(createImage("icon_16.jpg", "tray icon"));
-            final SystemTray tray = SystemTray.getSystemTray();
 
-            // Create a popup menu components
             final MenuItem przywroc = new MenuItem("Przywroc");
-            CheckboxMenuItem cb1 = new CheckboxMenuItem("Autobackup");
-            CheckboxMenuItem cb2 = new CheckboxMenuItem("Ustawienia");
-            Menu displayMenu = new Menu("Display");
-            MenuItem errorItem = new MenuItem("Error");
-            MenuItem warningItem = new MenuItem("Warning");
-            MenuItem infoItem = new MenuItem("Info");
-            MenuItem noneItem = new MenuItem("None");
             MenuItem exitItem = new MenuItem("Exit");
 
             przywroc.addActionListener(new ActionListener() {
@@ -123,25 +84,10 @@ public class Main {
                     System.exit(0);
                 }
             });
-            //Add components to popup menu
             popup.add(przywroc);
             popup.addSeparator();
-            // popup.add(cb1);
-            // popup.add(cb2);
-            // popup.addSeparator();
-            //  popup.add(displayMenu);
-            //  displayMenu.add(errorItem);
-            //  displayMenu.add(warningItem);
-            //  displayMenu.add(infoItem);
-            //  displayMenu.add(noneItem);
             popup.add(exitItem);
 
-       //     trayIcon.setPopupMenu(popup);
-
-
-            
-
-            // TODO code application logic here
         }
     }
 
