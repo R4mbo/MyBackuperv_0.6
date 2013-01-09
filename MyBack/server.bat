@@ -1,1 +1,0 @@
-java -jar ./dist/Backuper.jar serve %1

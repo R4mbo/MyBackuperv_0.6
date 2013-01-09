@@ -1,1 +1,0 @@
-java -jar ./Dist/Backuper.jar %1 %2 %3
